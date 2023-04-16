@@ -117,5 +117,8 @@ function populateUI(profile) {
     document.getElementById("uri").setAttribute("href", profile.external_urls.spotify);
     document.getElementById("url").innerText = profile.href;
     document.getElementById("url").setAttribute("href", profile.href);
-    document.getElementById("asd").innerText = profile.id;
+    document.addEventListener("DOMContentLoaded", function() {
+        // Your JavaScript code here
+        document.getElementById("asd").innerText = profile.id;
+    });
 }
