@@ -7,6 +7,12 @@ if (!code) {
 } else {
     const accessToken = await getAccessToken(clientId, code);
     const profile = await fetchProfile(accessToken);
+    // const followedArtists = await fetchFollowedArtists(accessToken, '');
+    // const nextPage = await fetchFollowedArtists(accessToken, followedArtists.artists.cursors.after);
+
+    const followedArtists = await fetchFollowedArtists(accessToken);
+    console.log(followedArtists);
+    // console.log(nextPage);
     populateUI(profile);
 }
 
@@ -21,7 +27,7 @@ async function redirectToAuthCodeFlow(clientId) {
     params.append("client_id", clientId);
     params.append("response_type", "code");
     params.append("redirect_uri", "http://localhost:3000/html/index.html");
-    params.append("scope", "user-read-private user-read-email");
+    params.append("scope", "user-read-private user-read-email user-follow-read");
     params.append("code_challenge_method", "S256");
     params.append("code_challenge", challenge);
 
@@ -80,6 +86,23 @@ async function fetchProfile(token) {
     return await result.json();
 }
 
+// async function fetchFollowedArtists(token, after) {
+//     const result = await fetch(`https://api.spotify.com/v1/me/following?type=artist&after=${after}&limit=5`, {
+//         method: "GET", headers: { Authorization: `Bearer ${token}` }
+//     });
+
+//     return await result.json();
+// }
+
+async function fetchFollowedArtists(token) {
+    const result = await fetch('https://api.spotify.com/v1/me/following?type=artist&limit=5', {
+        method: "GET", headers: { Authorization: `Bearer ${token}`}
+    });
+
+    return await result.json();
+}
+
+
 function populateUI(profile) {
     document.getElementById("displayName").innerText = profile.display_name;
     if (profile.images[0]) {
@@ -94,4 +117,5 @@ function populateUI(profile) {
     document.getElementById("uri").setAttribute("href", profile.external_urls.spotify);
     document.getElementById("url").innerText = profile.href;
     document.getElementById("url").setAttribute("href", profile.href);
+    document.getElementById("asd").innerText = profile.id;
 }
