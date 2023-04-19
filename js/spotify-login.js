@@ -14,6 +14,7 @@ if (!code) {
     console.log(followedArtists);
     // console.log(nextPage);
     populateUI(profile);
+    window.history.replaceState({}, null, "/html/index.html");
 }
 
 async function redirectToAuthCodeFlow(clientId) {
@@ -110,24 +111,11 @@ function populateUI(profile) {
     document.getElementById("uri").setAttribute("href", profile.external_urls.spotify);
     document.getElementById("url").innerText = profile.href;
     document.getElementById("url").setAttribute("href", profile.href);
-    // document.addEventListener("DOMContentLoaded", function() {
-        // Your JavaScript code here
-        // document.getElementById("asd").innerText = profile.id;
-    // });
 }
 
-// const goToFriendsPage = async () => {
-// const accessToken = localStorage.getItem("verifier");
-//   if (!accessToken) {
-//     // If the user is not authenticated, redirect them to the authentication flow
-//     redirectToAuthCodeFlow(clientId);
-//   } else {
-//     // If the user is already authenticated, navigate to the friends page
-//     window.location.href = "FriendsPage.html";
-//   }
-// };
-
-// document.getElementById("go-to-friends-page").addEventListener("click", goToFriendsPage);
+export function myMethod() {
+    alert("Hello!");
+}
 
 
 
