@@ -1,5 +1,5 @@
-// import { myMethod } from './spotify-login.js'
+import { myMethod2 } from './spotify-login.js'
 
-// myMethod();
+myMethod2();
 
-alert("hello");
+// alert("hello");

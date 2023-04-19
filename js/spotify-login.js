@@ -123,14 +123,19 @@ export async function myMethod() {
         document.getElementById("url").setAttribute("href", profile.href);
     }
 
-    function myMethod2() {
-        alert("Hello!");
-    }
+
 }
 
-window.addEventListener('load', myMethod);
+export function myMethod2() {
+    alert("Hello!");
+}
+
+// if(isAuthorized == true) {
+//     window.addEventListener('load', myMethod);    
+// }
 
 
+// export {myMethod2};
 
 
 
