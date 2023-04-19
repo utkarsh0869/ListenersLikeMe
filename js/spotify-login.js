@@ -86,13 +86,6 @@ async function fetchProfile(token) {
     return await result.json();
 }
 
-// async function fetchFollowedArtists(token, after) {
-//     const result = await fetch(`https://api.spotify.com/v1/me/following?type=artist&after=${after}&limit=5`, {
-//         method: "GET", headers: { Authorization: `Bearer ${token}` }
-//     });
-
-//     return await result.json();
-// }
 
 async function fetchFollowedArtists(token) {
     const result = await fetch('https://api.spotify.com/v1/me/following?type=artist&limit=5', {
@@ -117,8 +110,25 @@ function populateUI(profile) {
     document.getElementById("uri").setAttribute("href", profile.external_urls.spotify);
     document.getElementById("url").innerText = profile.href;
     document.getElementById("url").setAttribute("href", profile.href);
-    document.addEventListener("DOMContentLoaded", function() {
+    // document.addEventListener("DOMContentLoaded", function() {
         // Your JavaScript code here
-        document.getElementById("asd").innerText = profile.id;
-    });
+        // document.getElementById("asd").innerText = profile.id;
+    // });
 }
+
+// const goToFriendsPage = async () => {
+// const accessToken = localStorage.getItem("verifier");
+//   if (!accessToken) {
+//     // If the user is not authenticated, redirect them to the authentication flow
+//     redirectToAuthCodeFlow(clientId);
+//   } else {
+//     // If the user is already authenticated, navigate to the friends page
+//     window.location.href = "FriendsPage.html";
+//   }
+// };
+
+// document.getElementById("go-to-friends-page").addEventListener("click", goToFriendsPage);
+
+
+
+

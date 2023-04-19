@@ -19,7 +19,13 @@
 		    <li>Profile Image: <span id="imgUrl"></span></li>
 		</ul>
 		</section>
-        <a href="FriendsPage.html">Go to Friends Page</a>
+         <a id="go-to-friends-page" href="FriendsPage.html">Go to Friends Page</a>
 
-    </body>
+        <script>
+            var link = document.getElementById("go-to-friends-page");
+            link.addEventListener("click", function(event) {
+                event.preventDefault();
+                window.location.href = "FriendsPage.html";
+            });
+        </script>
 </html>
