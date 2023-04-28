@@ -1,10 +1,6 @@
-let isAuthorized = false;
+var isAuthorized = false;
 
-
-var profile = null;
-
-export async function myMethod() {
-    if(!isAuthorized) {
+export async function authenticate() {
         const clientId = "241075b3b0504a96b913adec8844d991"; // Replace with your client id
         const params = new URLSearchParams(window.location.search);
         const code = params.get("code");
@@ -13,15 +9,18 @@ export async function myMethod() {
             redirectToAuthCodeFlow(clientId);
         } else {
             const accessToken = await getAccessToken(clientId, code);
-            profile = await fetchProfile(accessToken);
-            // const followedArtists = await fetchFollowedArtists(accessToken, '');
-            // const nextPage = await fetchFollowedArtists(accessToken, followedArtists.artists.cursors.after);
 
-            // const followedArtists = await fetchFollowedArtists(accessToken);
-            // console.log(followedArtists);
-            // console.log(nextPage);
+            const profile = await fetchProfile(accessToken);
+            localStorage.setItem("profile", JSON.stringify(profile));
+
+            const followedArtists = await fetchFollowedArtists(accessToken);
+            localStorage.setItem("followedArtists", JSON.stringify(followedArtists));
+
+            // const blockedUsers = await fetchBlockedUsers(accessToken);
+            // localStorage.setItem("blockedUsers", JSON.stringify(blockedUsers));
+            // console.log(blockedUsers);
+
             populateUI(profile);
-            window.history.replaceState({}, null, "/html/index.html");
         }
 
         async function redirectToAuthCodeFlow(clientId) {
@@ -85,57 +84,68 @@ export async function myMethod() {
             return access_token;
         }
 
-        isAuthorized = true;
-    }
-    //rest of the methods
+        //rest of the methods
+        async function fetchProfile(token) {
+            const result = await fetch("https://api.spotify.com/v1/me", {
+                method: "GET", headers: { Authorization: `Bearer ${token}` }
+            });
 
-    async function fetchProfile(token) {
-        const result = await fetch("https://api.spotify.com/v1/me", {
-            method: "GET", headers: { Authorization: `Bearer ${token}` }
-        });
-
-        return await result.json();
-    }
-
-
-    async function fetchFollowedArtists(token) {
-        const result = await fetch('https://api.spotify.com/v1/me/following?type=artist&limit=5', {
-            method: "GET", headers: { Authorization: `Bearer ${token}`}
-        });
-
-        return await result.json();
-    }
-
-
-    function populateUI(profile) {
-        document.getElementById("displayName").innerText = profile.display_name;
-        if (profile.images[0]) {
-            const profileImage = new Image(400, 200);
-            profileImage.src = profile.images[0].url;
-            document.getElementById("avatar").appendChild(profileImage);
-            document.getElementById("imgUrl").innerText = profile.images[0].url;
+            return await result.json();
         }
-        document.getElementById("id").innerText = profile.id;
-        document.getElementById("email").innerText = profile.email;
-        document.getElementById("uri").innerText = profile.uri;
-        document.getElementById("uri").setAttribute("href", profile.external_urls.spotify);
-        document.getElementById("url").innerText = profile.href;
-        document.getElementById("url").setAttribute("href", profile.href);
-    }
 
 
+        async function fetchFollowedArtists(token) {
+            const result = await fetch('https://api.spotify.com/v1/me/following?type=artist&limit=15', {
+                method: "GET", headers: { Authorization: `Bearer ${token}`}
+            });
+
+            return await result.json(); 
+        }
+
+        async function fetchBlockedUsers(token) {
+            const result = await fetch('https://api.spotify.com/v1/me/blocked', {
+                method: "GET", headers: { Authorization: `Bearer ${token}`}
+            });
+
+            return await result.json(); 
+        }
+
+
+        function populateUI(profile) {
+            document.getElementById("displayName").innerText = profile.display_name;
+            if (profile.images[0]) {
+                const profileImage = new Image(400, 200);
+                profileImage.src = profile.images[0].url;
+                document.getElementById("avatar").appendChild(profileImage);
+                document.getElementById("imgUrl").innerText = profile.images[0].url;
+            }
+            document.getElementById("id").innerText = profile.id;
+            document.getElementById("email").innerText = profile.email;
+            document.getElementById("uri").innerText = profile.uri;
+            document.getElementById("uri").setAttribute("href", profile.external_urls.spotify);
+            document.getElementById("url").innerText = profile.href;
+            document.getElementById("url").setAttribute("href", profile.href);
+        }
+        isAuthorized = true;
 }
 
-export function myMethod2() {
-    alert("Hello!");
-}
+// export async function myMethod() {
+//     if(!isAuthorized) {
+//         await authenticate();
+//     } else {
+//         return profile;
+//     }
 
-// if(isAuthorized == true) {
-//     window.addEventListener('load', myMethod);    
 // }
 
 
-// export {myMethod2};
+
+
+
+
+
+
+
 
 
 

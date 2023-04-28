@@ -1,0 +1,154 @@
+/*
+ * CSS FOR FRIENDS PAGE
+ */
+#userProfileDiv {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+/* style the user profile image */
+#userProfileImage {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin: 5px;
+  object-fit: cover; /* add this to prevent image distortion */
+}
+
+.circular-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 5px;
+}
+
+.divClass {
+    align-items: center;
+    background-color: white;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.follow-button {
+    margin: 10px;
+    background-color: #3897f0;
+    color: #fff;
+    padding: 3px 10px; /* decreased padding */
+    border: none;
+    border-radius: 3px;
+    font-size: 12px; /* decreased font-size */
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.heading3 {
+  color: black;
+}
+
+.dark-mode {
+  background-color: #333;
+  color: #fff;
+}
+
+/*
+ * CSS FOR SETTINGS PAGE
+ */
+#userSettingsHeader {
+  padding: 1px;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: row;
+  /* changes to make for the themes change */
+  border-color: dimgrey;
+  border-style: solid;
+  border-width: 1px;
+  background-color: white;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+}
+
+#sideNavBar {
+  background-color: white;
+  height: 100vh;
+  width: 15%;
+  padding: 1rem;
+  border-color: dimgrey;
+  border-style: solid;
+  border-width: 1px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  width: 85%;
+}
+
+#content-header {
+  width: 100%;
+  margin-top: 1px;
+  padding: 1px;
+  height: 100%;
+  /* changes to make for the themes */
+  border-color: dimgrey;
+  border-style: solid;
+  border-width: 1px;
+  background-color: white;
+}
+
+nav button {
+  font-size: 24px;
+  border-color: dimgrey;
+  border-width: 1px;
+  color: black;
+}
+
+#userSettingsH1 {
+  color: black;
+}
+
+body {
+  background-color: white;
+  color: #fff;
+}
+
+body.dark-mode #userSettingsHeader {
+  background-color: black;
+}
+
+body.dark-mode #sideNavBar {
+  background-color: black;
+}
+
+body.dark-mode #userSettingsH1 {
+  color: white;
+}
+
+body.dark-mode nav {
+  background-color: black;
+}
+
+body.dark-mode #content-header {
+  background-color: black;
+}
+
+body.dark-mode nav button {
+  background-color: black;
+  color: white;
+}
+
+
+
+
+
