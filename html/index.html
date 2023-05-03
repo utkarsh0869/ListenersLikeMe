@@ -4,12 +4,83 @@
         <meta charset="utf-8">
         <title>My Spotify Profile</title>
         <script src="../js/index.js" type="module"></script>
+        <style type="text/css">
+			html {
+				font-family: 'Open Sans', sans-serif;
+			}
+
+			#header {
+			    display: flex;
+			    justify-content: space-between;
+			    align-items: center;
+			    padding: 20px;
+			    background-color: #1db954;
+			    color: white;
+			    font-size: 40px;
+			    font-weight: bold;
+			}
+
+			body {
+			    margin: 0;
+			    padding: 0;
+			    background: linear-gradient(to bottom, #17e35f, #191414);
+			    background-size: cover;
+			    background-attachment: fixed;
+			    font-size: 16px;
+			}
+
+			#profile {
+			    max-width: 800px;
+			    margin: 0 auto;
+			    background-color: linear-gradient(to bottom, #17e35f, #191414);;
+			    padding: 20px;
+			    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+			    border-radius: 5px;
+			    display: flex;
+			    flex-direction: column;
+			    align-items: center;
+			}
+
+			#avatar {
+			    width: 200px;
+			    height: 200px;
+			    border-radius: 50%;
+			    overflow: hidden;
+			    margin-bottom: 20px;
+			    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+			}
+
+			ul {
+			    list-style: none;
+			    padding: 0;
+			    margin: 0;
+			    text-align: center;
+			}
+
+			li {
+			    margin-bottom: 10px;
+			    color: white;
+			}
+
+			a {
+			    color: white;
+			    text-decoration: none;
+			    transition: color 0.2s ease-in-out;
+			}
+
+			a:hover {
+			    color: #168d3d;
+			}
+
+        </style>
     </head>
     <body>
-    	<h1>Display your Spotify profile data</h1>
+	    <div id="header">
+	      <span id="projectTitle">ListenersLikeMe</span>
+	      <span id="displayName"></span>
+	    </div>    	
 
 		<section id="profile">
-		<h2>Logged in as <span id="displayName"></span></h2>
 		<span id="avatar"></span>
 		<ul>
 		    <li>User ID: <span id="id"></span></li>
@@ -19,6 +90,15 @@
 		    <li>Profile Image: <span id="imgUrl"></span></li>
 		</ul>
 		</section>
-         <a id="go-to-friends-page" href="FriendsPage.html">Go to Friends Page</a>
-         <a id="go-to-settings-page" href="SettingsPage.html">Go to Settings Page</a>
+    </body>
+    <script type="text/javascript">
+    	document.addEventListener("DOMContentLoaded", function(event) {
+		    var projectTitle = document.getElementById("projectTitle");
+
+			projectTitle.addEventListener("click", () => {
+			    window.location.href = "HomePage.html";
+			});
+		});
+
+    </script>
 </html>

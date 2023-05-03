@@ -7,13 +7,22 @@ url, and inserting the image element in the div.
 */
 var userSettingsHeader = document.getElementById("userSettingsHeader");
 
-var img = new Image();
 const storedProfile = localStorage.getItem('profile');
 const profile = JSON.parse(storedProfile);
+var img = new Image();
+let xhr = new XMLHttpRequest();
+xhr.onreadystatechange = function() {
+    if (this.readyState === 4 && this.status === 200) {
 
-if (profile.images[0]) {
-    img.src = profile.images[0].url; 
-}
+        let userData = JSON.parse(this.responseText);
+        if (profile.images[0]) {
+					img.src = userData.userProfileImageURL; 
+			}
+    }
+};
+xhr.open("GET", "../php/GetProfileFromServer.php?userId=" + profile.id);
+xhr.send();
+
 img.classList.add('circular-image'); 
 userSettingsHeader.insertBefore(img, userSettingsHeader.children[0]);
 
@@ -29,7 +38,6 @@ blockedUsersBtn.addEventListener('click', () => {
 	li.textContent = "Added a blocked user. - No Spotify API endpoint to retrieve blocked users.";
 
 	var bgColor = window.getComputedStyle(contentHeader).backgroundColor;
-	// console.log("bg color is " + getContrastColor(bgColor) + " " + bgColor);
 
 	if(getContrastColor(bgColor) == "white") {
 		li.style.color = "black";
@@ -57,6 +65,16 @@ can login.
 */
 var signOutBtn = document.getElementById("signOutBtn");
 signOutBtn.addEventListener("click", () => {
+	
+  var xhr2 = new XMLHttpRequest();
+  xhr2.onreadystatechange = function() {
+      if (this.readyState === 4 && this.status === 200) {
+          console.log("Table cleared successfully");
+      }
+  };
+  xhr2.open('POST', '../php/ClearTable.php');
+  xhr2.send();
+  localStorage.clear();
 	authenticate();
 });
 

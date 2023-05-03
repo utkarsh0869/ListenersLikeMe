@@ -12,13 +12,11 @@ export async function authenticate() {
 
             const profile = await fetchProfile(accessToken);
             localStorage.setItem("profile", JSON.stringify(profile));
+            saveProfileToServer(profile);
 
             const followedArtists = await fetchFollowedArtists(accessToken);
             localStorage.setItem("followedArtists", JSON.stringify(followedArtists));
-
-            // const blockedUsers = await fetchBlockedUsers(accessToken);
-            // localStorage.setItem("blockedUsers", JSON.stringify(blockedUsers));
-            // console.log(blockedUsers);
+            saveFollowedArtistsToServer(followedArtists);
 
             populateUI(profile);
         }
@@ -33,7 +31,7 @@ export async function authenticate() {
             const params = new URLSearchParams();
             params.append("client_id", clientId);
             params.append("response_type", "code");
-            params.append("redirect_uri", "http://localhost:3000/html/index.html");
+            params.append("redirect_uri", "http://localhost:8888/SoloListenersLikeMe/html/index.html");
             params.append("scope", "user-read-private user-read-email user-follow-read");
             params.append("code_challenge_method", "S256");
             params.append("code_challenge", challenge);
@@ -67,7 +65,7 @@ export async function authenticate() {
             params.append("client_id", clientId);
             params.append("grant_type", "authorization_code");
             params.append("code", code);
-            params.append("redirect_uri", "http://localhost:3000/html/index.html");
+            params.append("redirect_uri", "http://localhost:8888/SoloListenersLikeMe/html/index.html");
             if (typeof verifier === 'string') {
               params.append("code_verifier", verifier);
             } else {
@@ -102,50 +100,70 @@ export async function authenticate() {
             return await result.json(); 
         }
 
-        async function fetchBlockedUsers(token) {
-            const result = await fetch('https://api.spotify.com/v1/me/blocked', {
-                method: "GET", headers: { Authorization: `Bearer ${token}`}
-            });
-
-            return await result.json(); 
-        }
 
 
-        function populateUI(profile) {
-            document.getElementById("displayName").innerText = profile.display_name;
-            if (profile.images[0]) {
-                const profileImage = new Image(400, 200);
-                profileImage.src = profile.images[0].url;
-                document.getElementById("avatar").appendChild(profileImage);
-                document.getElementById("imgUrl").innerText = profile.images[0].url;
+        function saveProfileToServer(profile) {
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (this.readyState === 4 && this.status === 200) {
+                    console.log(this.responseText + "here"); 
+                }
+            };
+            xhr.open('POST', '../php/SaveProfileToServer.php');
+            xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            if(profile.images[0]) {
+                xhr.send('userEmail=' + profile.email + "&userId=" + profile.id +
+                     '&userName=' + profile.display_name + "&spotifyURI=" + profile.uri +
+                     '&spotifyURL=' + profile.external_urls.spotify +
+                     '&userProfileImageURL=' + profile.images[0].url + 
+                     '&userBio=' + "");
             }
-            document.getElementById("id").innerText = profile.id;
-            document.getElementById("email").innerText = profile.email;
-            document.getElementById("uri").innerText = profile.uri;
-            document.getElementById("uri").setAttribute("href", profile.external_urls.spotify);
-            document.getElementById("url").innerText = profile.href;
-            document.getElementById("url").setAttribute("href", profile.href);
+
         }
+
+        function saveFollowedArtistsToServer(followedArtists) {
+            for(var i = 0; i < 10; i++) {
+                let xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function() {
+                    if (this.readyState === 4 && this.status === 200) {
+                        console.log(this.responseText + "here"); 
+                    }
+                };
+                xhr.open('POST', '../php/SaveFollowedArtistsToServer.php');
+                xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                    
+                xhr.send('artistImageURL=' + followedArtists.artists.items[i].images[0].url + 
+                "&artistName=" + followedArtists.artists.items[i].name + 
+                "&artistId=" + followedArtists.artists.items[i].id);
+                    
+            }
+                
+        }
+
         isAuthorized = true;
 }
 
-// export async function myMethod() {
-//     if(!isAuthorized) {
-//         await authenticate();
-//     } else {
-//         return profile;
-//     }
+export function populateUI(profile) {
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        if (this.readyState === 4 && this.status === 200) {
 
-// }
-
-
-
-
-
-
-
-
-
-
-
-
+            let userData = JSON.parse(this.responseText);
+            document.getElementById("displayName").innerText = userData.userName;
+            if (profile.images[0]) {
+                const profileImage = new Image(400, 200);
+                profileImage.src = userData.userProfileImageURL;
+                document.getElementById("avatar").appendChild(profileImage);
+                document.getElementById("imgUrl").innerText = userData.userProfileImageURL;
+            }
+            document.getElementById("id").innerText = userData.userId;
+            document.getElementById("email").innerText = userData.userEmail;
+            document.getElementById("uri").innerText = userData.spotifyURI;
+            document.getElementById("uri").setAttribute("href", userData.spotifyURI);
+            document.getElementById("url").innerText = userData.spotifyURL;
+            document.getElementById("url").setAttribute("href", userData.spotifyURL);
+        }
+    };
+    xhr.open("GET", "../php/GetProfileFromServer.php?userId=" + profile.id);
+    xhr.send();
+}
