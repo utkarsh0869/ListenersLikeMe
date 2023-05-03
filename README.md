@@ -17,3 +17,7 @@ ListenersLikeMe is a web application designed to let users talk about their love
 ![ProfileViewingPage](https://user-images.githubusercontent.com/44482062/235997765-b2776fcc-815b-4c0f-993d-8288f56d47b2.png)
 
 ![SettingsPage](https://user-images.githubusercontent.com/44482062/235997809-d3d49caf-0354-4f42-a45c-cebb5e7bf55e.png)
+
+![UserProfileTable](https://user-images.githubusercontent.com/44482062/235998136-0182faff-4360-4a8e-9db5-3e2c7f5e5ffe.png)
+
+![FollowedArtistsTable](https://user-images.githubusercontent.com/44482062/235998211-ef9c3d73-9dfa-4ad3-b6cc-a518b51f34a5.png)
