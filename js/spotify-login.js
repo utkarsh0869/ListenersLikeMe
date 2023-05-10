@@ -18,6 +18,10 @@ export async function authenticate() {
             localStorage.setItem("followedArtists", JSON.stringify(followedArtists));
             saveFollowedArtistsToServer(followedArtists);
 
+            const topTracks = await fetchTopTracks(accessToken);
+            localStorage.setItem("topTracks", JSON.stringify(topTracks));
+            saveTopTracksToServer(topTracks);
+
             populateUI(profile);
         }
 
@@ -32,7 +36,7 @@ export async function authenticate() {
             params.append("client_id", clientId);
             params.append("response_type", "code");
             params.append("redirect_uri", "http://localhost:8888/SoloListenersLikeMe/html/index.html");
-            params.append("scope", "user-read-private user-read-email user-follow-read");
+            params.append("scope", "user-read-private user-read-email user-follow-read user-top-read");
             params.append("code_challenge_method", "S256");
             params.append("code_challenge", challenge);
 
@@ -93,7 +97,7 @@ export async function authenticate() {
 
 
         async function fetchFollowedArtists(token) {
-            const result = await fetch('https://api.spotify.com/v1/me/following?type=artist&limit=15', {
+            const result = await fetch('https://api.spotify.com/v1/me/following?type=artist&limit=10', {
                 method: "GET", headers: { Authorization: `Bearer ${token}`}
             });
 
@@ -101,8 +105,17 @@ export async function authenticate() {
         }
 
 
+        async function fetchTopTracks(token) {
+            const result = await fetch('https://api.spotify.com/v1/me/top/tracks?limit=10', {
+                method: "GET", headers: { Authorization: `Bearer ${token}`}
+            });
+
+            return await result.json(); 
+        }
+
 
         function saveProfileToServer(profile) {
+
             let xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function() {
                 if (this.readyState === 4 && this.status === 200) {
@@ -120,6 +133,26 @@ export async function authenticate() {
             }
 
         }
+
+        function saveTopTracksToServer(topTracks) {
+            for(var i = 0; i < 10; i++) {
+                let xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function() {
+                    if (this.readyState === 4 && this.status === 200) {
+                        console.log(this.responseText + "here"); 
+                    }
+                };
+                xhr.open('POST', '../php/SaveTopTracksToServer.php');
+                xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                if(topTracks.items[0].album.images[0]) {
+                    xhr.send('trackName=' + topTracks.items[i].name + 
+                    "&trackImageURL=" + topTracks.items[i].album.images[0].url +
+                    "&trackId=" + topTracks.items[i].id +
+                    "&trackPreviewURL=" + topTracks.items[i].preview_url);
+                }
+            }
+
+        }        
 
         function saveFollowedArtistsToServer(followedArtists) {
             for(var i = 0; i < 10; i++) {

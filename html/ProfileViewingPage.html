@@ -5,7 +5,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Viewing Page</title>
-    <script type = "text/javascript" src = "Profile.js"> </script>
 </head>
 <body>
 
@@ -13,10 +12,12 @@
     <!-- This is the container of the user section! Will have all elements stored in it.-->
     <div id = "UserBiographyContainer"> 
         <div id = "ProfilePicContainer"> 
-            <img id = "ProfilePic" src = "SpotifyDefaultProfilePic.jfif">
+            <img id = "ProfilePic">
         </div>
+        <h2 id="userBioHeader">User Biography</h2>
+        <textarea name="userBio" id="biography" rows="15" cols="130"></textarea>
+        <button id="saveButton" onclick="saveBiographyToServer()">Save</button>
 
-        
         <!-- This is the 3 dot!!! -->
         <div id = "threeDotsContainer">
         
@@ -32,19 +33,9 @@
             </div>
             <!--End of drop down menu-->
         </div>
-
-        <summary id = "userBio">
-
-            User Biography
-            
-
-        </summary>
         
-        <h2 id = "userName"> Username </h2> <!-- Irrelevant-->
+        <h2 id = "userName"> Username </h2>
         
-
-        <!--Make an API call! -->
-          <!--Everytime we have an ap call that runs a different operation, you can only do one js file for each api call. Only one API function per js file. -->
     </div>
     </input>
 
@@ -56,44 +47,16 @@
 
     <br>
 
+    <div style="overflow: auto; overflow-x: auto;" id="scrollContainer1">
 
-    <!--This is the parent container, 3 tables are child--> 
-
-    <div id = "scrollContainer1">
-    <!--<div id = "parent1">
-    This is the table for the favorite Artists-->
-    <!--<table id = "FavoriteArtists" Border = "1"> -->
-        <!--<tr id = "ArtistRow"> -->
-            <!--<td> <img src = "TheWeekendPic.jpg" width = "200px" height = "200px"> <br> <text style = "text-align: center;"> The Weekend </text> </td>
-            <td> <img src = "Tame Impala.jfif" width = "200px" height = "200px"> <br> <text style = "text-align: center;"> Tame Impala </text> </td> -->
-        <!--</tr> 
-    </table> 
-    </div>-->
     </div>
 
 
-    <div id = "Fav2Container"> <h1> Favorite Songs </h1></div>
+    <div id = "Fav2Container"> <h1> Top Tracks </h1></div>
 
 
-    <div id = "scrollContainer2">
+    <div style="overflow: auto; overflow-x: auto;" id = "scrollContainer2">
 
-    <!--<div id = "parent2"> -->
-    <!-- This is the table for the favorite songs-->
-    <!--<table id = "FavoriteSongs" Border = "1"> 
-        <caption id = "title"> Favorite Songs </caption>
-        <tr> 
-            <td id = "SongName" >The Weekend - Blinding Lights </td>
-        </tr>
-
-        <tr> 
-            <td id = "SongName"> John Denvor - Take Me Home, Country Roads</td>
-        </tr>
-
-        <tr> 
-            <td id = "SongName">  MF DOOM - PotHolderz (feat. Count Bass D)</td>
-        </tr>
-    </table>
-    </div> -->
     </div>
 
 
@@ -101,28 +64,25 @@
 
 
     <div id = "scrollContainer3">
-    <!--<div id = "parent3"> -->
-    <!-- This is the table for the favorite Genres-->
-    <!--<table id = FavoriteGenres Border = "1"> -->
-        <!--<caption id = "title"> Favorite Genres </caption> -->
-       <!-- <tr> 
-            <td> Rock  </td> 
-        </tr>
-        
-        <tr> 
-            <td> Blues </td>
-        </tr>
-        
-    </table>
-    -->
+
     </div>
 
-</body>
-
-<!-- This is where I do the CSS rules and properties for the ids. -->    
 <style type = "text/css">
-
-    
+    #userBioHeader {
+        position: relative;
+        bottom: 300px;
+        left: 350px;
+    }
+    #biography {
+        position: relative;
+        bottom: 300px;
+        left: 350px;
+    }
+    #saveButton {
+        position: relative;
+        bottom: 305px;
+        left: 350px;
+    }
     #UserBiographyContainer{
         height: 400px;
         width: 1550px;
@@ -260,9 +220,10 @@
         font: 24px/36px sans-serif;
         width: 900px;
         height: 350px;
-        overflow-x: scroll; /* We only give the vertical scroll wheel*/
-        overflow-y: hidden;
+        overflow-x: auto; /* We only give the vertical scroll wheel*/
+        overflow-y: auto;
         background-color: white;
+        display: flex;
 
         margin-top: 210px;
         margin-left: 25px;
@@ -292,6 +253,7 @@
         width: 900px;
         height: 350px;
         overflow-y: scroll; /* We only give the vertical scroll wheel*/
+        display: flex;
 
         background-color: white;
 
@@ -363,12 +325,12 @@
     }
     
     tr{
-        background-color: pink;
+/*        background-color: rgb(9, 177, 82); */
         width: max-content;
     }
     
     td{
-        background-color: grey;
+        background-color: white;
         width: max-content;
     }
     
@@ -457,88 +419,181 @@
     }
 
     </style>
-</html>
-
-
-
-
-
-
 
 <script> 
+    const storedProfile = localStorage.getItem("profile");
+    const profile = JSON.parse(storedProfile);
 
-displayGenres();
-displayArtists();
-displaySongs();
+    const storedFollowedArtist = localStorage.getItem("followedArtists");
+    const followedArtists = JSON.parse(storedFollowedArtist);
 
+    const storedTopTracks = localStorage.getItem("topTracks");
+    const topTracks = JSON.parse(storedTopTracks);
 
-function displayGenres(){
+    displayGenres();
+    displayArtists();
+    displaySongs();
+    populateUserBiography();
 
-    // window.alert("You have genres displaying!");
+    function saveBiographyToServer() {
+      var biography = document.getElementById('biography').value;
 
-    for(var i = 0; i < 15; i++){
-
-        // THIS CREATES THE genre titles
-        // Get a reference to the scroll container element 
-        var scrollContainer3 = document.getElementById("scrollContainer3");
-
-        // Create a new div element
-        var genreTitleContainer = document.createElement("div");
-
-        // Set some content for the newDiv. You can substitute values for the defeault values
-        genreTitleContainer.innerHTML = "<div id = 'genreTitle' > Country </div> <br> <br>";
-
-        // Add the new div to the container
-        scrollContainer3.appendChild(genreTitleContainer);  
+      // Perform an AJAX request to save the biography in the database
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', '../php/SaveProfileToServer.php', true);
+      xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          // Handle the response from the server if needed
+          console.log(xhr.responseText);
+        }
+      };
+      xhr.send('userBio=' + biography.toString() +
+                '&userId=' + profile.id);
     }
-}
 
-function displaySongs(){
-    window.alert("You have songs displaying");
+    function populateUserBiography() {
+        let xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
 
-    for(var i = 0; i < 15; i++){
-        // THIS CREATES THE Songs stuffff
-        // Get a reference to the scroll container element 
-        var scrollContainer2 = document.getElementById("scrollContainer2");
+                let userData = JSON.parse(this.responseText);
+                if (profile.images[0]) {
 
-        // Create a new div element
-        var songTitleContainer = document.createElement("div");
-
-        // Set some content for the newDiv. You can substitute values for the defeault values
-        songTitleContainer.innerHTML = "<div id = 'songName'> John Denvor - Take Me Home, Country Roads </div> <br> <br>";
-
-        // Add the new div to the container
-        scrollContainer2.appendChild(songTitleContainer);  
+                    document.getElementById("biography").value = userData.userBio; 
+                }
+            }
+        };
+        xhr.open("GET", "../php/GetProfileFromServer.php?userId=" + profile.id);
+        xhr.send();
     }
-        
-}
+
+    function displayGenres(){
+
+        // window.alert("You have genres displaying!");
+
+        for(var i = 0; i < 15; i++){
+
+            // THIS CREATES THE genre titles
+            // Get a reference to the scroll container element 
+            var scrollContainer3 = document.getElementById("scrollContainer3");
+
+            // Create a new div element
+            var genreTitleContainer = document.createElement("div");
+
+            // Set some content for the newDiv. You can substitute values for the defeault values
+            genreTitleContainer.innerHTML = "<div id = 'genreTitle' > Country </div> <br> <br>";
+
+            // Add the new div to the container
+            scrollContainer3.appendChild(genreTitleContainer);  
+        }
+    }
 
 
-function displayArtists(){
+    function displayArtists(){
 
-    window.alert("You have artists dispaying");
-
-    for(var i = 0; i < 15; i++){
-
-        // THIS CREATES THE Songs stuffff
-        // Get a reference to the scroll container element 
         var scrollContainer1 = document.getElementById("scrollContainer1");
 
-        // Create a new div element
-        var ArtistTitleContainer = document.createElement("td");
+        for(var i = 0; i < 10; i++) {
 
-        // Set some content for the newDiv. You can substitute values for the defeault values
-        ArtistTitleContainer.innerHTML = "<tr id = 'ArtistRow'><td><img src = 'TheWeekendPic.jpg' width = '200px' height = '200px'> <br> <text style = 'text-align: center;'> The Weekend </text> </td></tr> ";
+            var imageUrl = followedArtists.artists.items[i].images[0].url;
 
-        // Add the new div to the container
-        scrollContainer1.appendChild(ArtistTitleContainer); 
+            // Create the image element
+            var image = document.createElement("img");
+            image.src = imageUrl;
+            image.style.width = "200px";
+            image.style.height = "200px";
+
+            // Create the paragraph element
+            var name = document.createElement("p");
+            name.textContent = followedArtists.artists.items[i].name;
+
+            // Create the table row and cell
+            var row = document.createElement("tr");
+            var cell = document.createElement("td");
+
+            // Append the image and paragraph elements to the cell
+            cell.appendChild(image);
+            cell.appendChild(name);
+
+            // Append the cell to the row
+            row.appendChild(cell);
+
+            // Append the row to the container
+            scrollContainer1.appendChild(row);
+
+        }
+
     }
 
-}
+    function displaySongs(){
+
+        var scrollContainer2 = document.getElementById("scrollContainer2");
+
+        for(var i = 0; i < 10; i++) {
+
+            var imageUrl = topTracks.items[i].album.images[0].url
+            var previewUrl = topTracks.items[i].preview_url;
+
+            // Create the image element
+            var image = document.createElement("img");
+            image.src = imageUrl;
+            image.style.width = "200px";
+            image.style.height = "200px";
+
+            // Create the paragraph element
+            var name = document.createElement("p");
+            name.textContent = topTracks.items[i].name;
+
+            // Create the table row and cell
+            var row = document.createElement("tr");
+            var cell = document.createElement("td");
+
+            // Add click event listener to play the track preview
+            image.addEventListener('click', function(previewUrl) {
+              return function() {
+                toggleAudio(previewUrl);
+              };
+            }(previewUrl));
+
+            // Append the image and paragraph elements to the cell
+            cell.appendChild(image);
+            cell.appendChild(name);
+
+            // Append the cell to the row
+            row.appendChild(cell);
+
+            // Append the row to the container
+            scrollContainer2.appendChild(row);
+
+        }
+
+        var audioPlayer = new Audio();
+
+        function toggleAudio(previewUrl) {
+          if (audioPlayer.src === previewUrl && !audioPlayer.paused) {
+            // If the same preview is already playing, pause it
+            audioPlayer.pause();
+          } else {
+            // Otherwise, set the new preview URL and play it
+            audioPlayer.src = previewUrl;
+            audioPlayer.play();
+          }
+        }
+            
+    }    
+
+    var profilePicture = document.getElementById("ProfilePic");
+
+    profilePicture.src = profile.images[0].url;
 
 
-
-
+    var userName = document.getElementById("userName");
+    userName.innerHTML = profile.display_name;
 
 
 </script>
+
+
+</body>
+</html>

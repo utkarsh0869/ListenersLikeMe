@@ -31,7 +31,16 @@
             echo "Error: " . $stmt->errorInfo()[2];
         }
     } else {
-        echo "Data already exists for this userId";
+        // Update the existing record with the new biography
+        $stmt = $pdo->prepare("UPDATE userProfile SET userBio = :userBio WHERE userId = :userId");
+        $stmt->bindParam(':userBio', $userBio);
+        $stmt->bindParam(':userId', $userId);
+
+        if ($stmt->execute()) {
+            echo "Data updated successfully";
+        } else {
+            echo "Error: " . $stmt->errorInfo()[2];
+        }
     }
 
     $stmt->closeCursor();
