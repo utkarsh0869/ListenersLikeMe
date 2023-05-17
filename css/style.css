@@ -5,6 +5,7 @@
   margin-left: auto;
   margin-right: auto;
   text-align: center;
+  font-family: arial,sans-serif;
 }
 
 /* style the user profile image */
@@ -13,7 +14,7 @@
   height: 100px;
   border-radius: 50%;
   margin: 5px;
-  object-fit: cover; /* add this to prevent image distortion */
+  object-fit: cover;
 }
 
 .circular-image {
@@ -24,6 +25,7 @@
 }
 
 .divClass {
+    font-family: arial,sans-serif;
     align-items: center;
     background-color: linear-gradient(to bottom, #17e35f, #191414);
     width: 100%;
@@ -37,6 +39,7 @@
 }
 
 .follow-button {
+    font-family: arial,sans-serif;
     margin: 10px;
     background-color: #3897f0;
     color: #fff;
@@ -49,6 +52,7 @@
 }
 
 .heading3 {
+  font-family: arial,sans-serif;
   color: black;
 }
 
@@ -61,6 +65,7 @@
  * CSS FOR SETTINGS PAGE
  */
 #userSettingsHeader {
+  font-family: arial,sans-serif;
   padding: 1px;
   width: 100%;
   align-items: center;
@@ -108,6 +113,7 @@
 }
 
 nav button {
+    font-family: arial,sans-serif;
     background-color: #17e35f;
     color: white;
     padding: 20px;
